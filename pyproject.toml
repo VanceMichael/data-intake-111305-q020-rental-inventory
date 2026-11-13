@@ -6,3 +6,16 @@ dependencies = []
 
 [tool.unittest]
 start-directory = "tests"
+
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["rental_inventory", "rental_inventory.fixtures"]
+
+[tool.setuptools.package-dir]
+"rental_inventory.fixtures" = "fixtures"
+
+[tool.setuptools.package-data]
+"rental_inventory.fixtures" = ["*.json"]
