@@ -1,0 +1,162 @@
+{
+  "identity_fields": [
+    "supplier",
+    "equipment",
+    "revision"
+  ],
+  "source_records": [
+    {
+      "supplier": "hire-a",
+      "equipment": "EQ-9",
+      "revision": 1,
+      "zone": "Europe/Berlin",
+      "granularity": "day",
+      "start": "2026-10-25",
+      "end": "2026-10-26",
+      "status": "available"
+    },
+    {
+      "supplier": "hire-a",
+      "equipment": "EQ-9",
+      "revision": 2,
+      "zone": "Europe/Berlin",
+      "granularity": "30m",
+      "start": "2026-10-25T01:30:00+02:00",
+      "end": "2026-10-25T02:00:00+02:00",
+      "status": "available"
+    },
+    {
+      "supplier": "hire-a",
+      "equipment": "EQ-9",
+      "revision": 3,
+      "zone": "Europe/Berlin",
+      "granularity": "30m",
+      "start": "2026-10-25T01:30:00+02:00",
+      "end": "2026-10-25T02:00:00+02:00",
+      "status": "cancelled"
+    }
+  ],
+  "portal": {
+    "csrf": "form-2026-b"
+  },
+  "routes": {
+    "/feed": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 1,
+            "zone": "Europe/Berlin",
+            "granularity": "day",
+            "start": "2026-10-25",
+            "end": "2026-10-26",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 2,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 3,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "cancelled"
+          }
+        ]
+      },
+      "headers": {
+        "ETag": "feed-1"
+      }
+    },
+    "/rate-limited": {
+      "status": 429,
+      "headers": {
+        "Retry-After": "2"
+      },
+      "json": {
+        "error": "quota"
+      }
+    },
+    "/unstable": [
+      {
+        "status": 503,
+        "body": "temporarily unavailable"
+      },
+      {
+        "json": {
+          "items": []
+        }
+      }
+    ],
+    "/range": {
+      "body": "0123456789",
+      "range": true
+    },
+    "/range-ignored": {
+      "body": "0123456789"
+    },
+    "/truncated": {
+      "body": "partial",
+      "truncate": true
+    },
+    "/observations/1": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 1,
+            "zone": "Europe/Berlin",
+            "granularity": "day",
+            "start": "2026-10-25",
+            "end": "2026-10-26",
+            "status": "available"
+          }
+        ]
+      }
+    },
+    "/observations/2": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 2,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "available"
+          }
+        ]
+      }
+    },
+    "/observations/3": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 3,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "cancelled"
+          }
+        ]
+      }
+    }
+  }
+}
