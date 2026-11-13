@@ -18,6 +18,8 @@
 
 ## 领域样例
 
-- `granularity_handoff`：整日接口切换半小时接口；业务侧关注覆盖声明不混拼。
-- `stale_cache`：新日历后旧分页回流；业务侧关注不倒退有效日历。
-- `booking_impact`：已确认预约对应区间取消；业务侧关注定向复核且不自动改行程。
+- `name`：situation；业务侧关注observable。
+- `name`：situation；业务侧关注observable。
+- `name`：situation；业务侧关注observable。
+
+另外提供 `/rate-limited`、`/unstable`、`/range`、`/range-ignored`、`/truncated`、`/observations/1`、`/observations/2`、`/observations/3`。响应内容和版本由场景文件逐项声明，便于核对实际收到的来源资料。

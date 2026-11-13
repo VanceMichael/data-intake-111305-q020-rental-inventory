@@ -1,17 +1,17 @@
 [
   {
-    "name": "granularity_handoff",
-    "situation": "整日接口切换半小时接口",
-    "observable": "覆盖声明不混拼"
+    "name": "name",
+    "situation": "situation",
+    "observable": "observable"
   },
   {
-    "name": "stale_cache",
-    "situation": "新日历后旧分页回流",
-    "observable": "不倒退有效日历"
+    "name": "name",
+    "situation": "situation",
+    "observable": "observable"
   },
   {
-    "name": "booking_impact",
-    "situation": "已确认预约对应区间取消",
-    "observable": "定向复核且不自动改行程"
+    "name": "name",
+    "situation": "situation",
+    "observable": "observable"
   }
 ]
