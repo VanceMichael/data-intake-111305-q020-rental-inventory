@@ -1,6 +1,6 @@
 # 设备租赁目录的占用时间段采集
 
-这是资料接收程序的基础版。它请求来源接口，保留响应状态、头部、原始内容与每次观察的时间，能够从 JSON、CSV 或门户嵌入的数据块读回来源记录。当前不生成面向业务的有效版本，也不自动执行门户提交；重复观察会分别保留，原始内容按摘要复用。
+这是设备租赁目录的采集与解释程序。原始层请求来源接口，保留响应状态、头部、原始内容与每次观察的时间，能够从 JSON、CSV 或门户嵌入的数据块读回来源记录；解释层把来源声明转成区间化可用性、发布不可变日历版本，并标出受供方变化影响的已有预约。程序不自动执行门户提交，也不移动已有预约；重复观察分别保留，原始内容按摘要复用。
 
 ## 运行环境
 
@@ -33,12 +33,28 @@ python3 -m rental_inventory serve
 python3 -m rental_inventory capture --base-url http://127.0.0.1:实际端口 --archive .runtime/raw.sqlite3 --source local-source --path /feed
 ```
 
-归档库只追加来源观察，不用最后一条响应覆盖先前响应。`archive.py` 管理原始内容及完整性，`client.py` 执行一次请求，`decoding.py` 负责来源格式解码，`origin.py` 提供协议演练。业务解释可与原始接收独立演进。
+归档库只追加来源观察，不用最后一条响应覆盖先前响应。`archive.py` 管理原始内容及完整性，`client.py` 执行一次请求，`decoding.py` 负责来源格式解码，`origin.py` 提供协议演练。
+
+## 分页同步、日历发布与预约复核
+
+```sh
+python3 -m rental_inventory sync --base-url http://127.0.0.1:实际端口 --archive .runtime/raw.sqlite3 --catalog .runtime/catalog.sqlite3 --source local-source
+python3 -m rental_inventory book --catalog .runtime/catalog.sqlite3 --booking-id B1 --supplier hire-a --equipment EQ-9 --start 2026-10-25T01:30:00+02:00 --end 2026-10-25T02:00:00+02:00
+python3 -m rental_inventory query --catalog .runtime/catalog.sqlite3
+```
+
+- `sync` 按 `next` 逐页抓取，每页先归档再决定接受；写入已接受页、游标和已确认日历版本，中断后再次执行同一命令即可从第一个未接受页继续。
+- 旧缓存回流（`X-Calendar-Version` 低于已确认版本）会归档但不合并、不推进游标，重试耗尽时以 `incomplete` 结束并保持可恢复。
+- `sync` 结束时发布一个不可变解释版本：窗口与预约复核清单在同一个事务内写入、同一个读事务读出，摘要校验保证两者属于同一次解释。
+- 已有预约只出现在复核清单里，`action` 为 `review_only_do_not_move_booking`；来源差异逐条列出声明编号、抓取编号、修订号、时区、边界与粒度。
+- 各模块分工：`ingest.py` 负责可恢复分页，`availability.py` 负责区间语义与冲突保留，`catalog.py` 负责版本发布与一致查询，`impact.py` 提供复核预览。
+
+详细规则见 `docs/availability.md`。
 
 ## 开发资料
 
-来源协议见 `docs/source-protocol.md`，领域观察关系见 `tests/test_source_contract.py`。`fixtures/business_cases.json` 保存业务侧关注的交错情况及可观察口径；基础版测试验证的是原始采集和协议，不代表业务处理已经具备这些能力。所有条目、机构、文件内容和门户回执均为本地合成资料，不包含真实用户身份。
+来源协议见 `docs/source-protocol.md`，区间、发布与复核规则见 `docs/availability.md`，领域观察关系见 `tests/test_source_contract.py`。`fixtures/business_cases.json` 保存四类业务情况的名称、背景与可观察口径（跨时区边界、旧缓存回流、粒度切换、预约复核），`tests/test_business_cases.py` 会把这些口径当作断言执行。所有条目、机构、文件内容和门户回执均为本地合成资料，不包含真实用户身份。
 
 ## Wheel 分发
 
-构建产物位于 `dist/`，包含 `rental_inventory` 和命名空间内的合成来源 JSON。安装 wheel 后，即使当前目录不是源码目录，也可执行 `python3 -m rental_inventory demo`。提供 `serve --scenario` 时仍以指定文件为准，找不到指定文件会直接报错，不回退到默认资料。
+构建产物位于 `dist/`，包含 `rental_inventory` 和命名空间内的合成来源 JSON。安装 wheel 后，即使当前目录不是源码目录，也可执行 `python3 -m rental_inventory demo` 与 `sync`/`query`。提供 `serve --scenario` 时仍以指定文件为准，找不到指定文件会直接报错，不回退到默认资料。

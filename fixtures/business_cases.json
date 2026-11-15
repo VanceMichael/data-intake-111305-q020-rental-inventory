@@ -1,17 +1,68 @@
 [
   {
-    "name": "name",
-    "situation": "situation",
-    "observable": "observable"
+    "name": "cross-timezone-boundary",
+    "situation": "两家供方各自按本地时区声明整日可用：hire-a 使用 Europe/Berlin 的半开区间，hire-b 使用 Pacific/Auckland 的闭区间，且当天正好跨越夏令时回拨。",
+    "observable": "每条可用区间都带自己的 zone、boundary 与 revision；hire-a 的 2026-10-25 实际为 25 小时，hire-b 的 2026-10-26 闭区间按奥克兰本地午夜解析为 2026-10-25T11:00:00Z 起 24 小时。",
+    "route": "/availability/1",
+    "expect": {
+      "hire-a": {
+        "zone": "Europe/Berlin",
+        "boundary": "half_open",
+        "granularity": "day",
+        "hours": 25,
+        "start_utc": "2026-10-24T22:00:00+00:00",
+        "end_utc": "2026-10-25T23:00:00+00:00"
+      },
+      "hire-b": {
+        "zone": "Pacific/Auckland",
+        "boundary": "closed",
+        "granularity": "day",
+        "hours": 24,
+        "start_utc": "2026-10-25T11:00:00+00:00",
+        "end_utc": "2026-10-26T11:00:00+00:00"
+      }
+    }
   },
   {
-    "name": "name",
-    "situation": "situation",
-    "observable": "observable"
+    "name": "stale-cache-reflow",
+    "situation": "分页接口第 3 页先返回旧缓存（calendar_version 1），重试后才返回已确认的新日历（calendar_version 3）。",
+    "observable": "旧响应照常归档并可回查，但不合并、不推进游标；已确认版本保持为 3，后续窗口与复核清单都来自同一解释。",
+    "route": "/availability/3",
+    "expect": {
+      "rejected_reason": "stale_cached_response",
+      "rejected_calendar_version": 1,
+      "confirmed_calendar_version": 3,
+      "archived_but_not_merged": true
+    }
   },
   {
-    "name": "name",
-    "situation": "situation",
-    "observable": "observable"
+    "name": "granularity-switch",
+    "situation": "供方从整日可用切换到半小时段：整日声明仍覆盖同一天，半小时段只细化其中一段，另有一条更晚的半小时声明把该段改为不可用。",
+    "observable": "两种粒度分层解释而不是相加；半小时段决定自己范围内的状态，整日声明保留为 refined 来源；冲突的半小时声明各自保留，不被任意一方抹掉。",
+    "route": "/availability/2",
+    "expect": {
+      "coverage_semantics": "layered_by_granularity_never_summed",
+      "granularities": [
+        "30m",
+        "day"
+      ],
+      "conflict_sources_retained": 2
+    }
+  },
+  {
+    "name": "booking-review-without-movement",
+    "situation": "已有确认预约在供方取消或冲突区间内，采集器不得移动行程。",
+    "observable": "预约只被标为待复核，复核项列出触发它的来源差异（声明编号、来源、版本、粒度、时区、边界与声明状态）；预约本身保持不变。",
+    "route": "/availability/1",
+    "expect": {
+      "actions": [
+        "review_only_do_not_move_booking"
+      ],
+      "review_reasons": [
+        "supplier_availability_changed",
+        "supplier_declaration_conflict"
+      ],
+      "booking_times_unchanged": true
+    }
   }
 ]

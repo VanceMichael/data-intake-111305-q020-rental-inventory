@@ -22,4 +22,19 @@
 - `name`：situation；业务侧关注observable。
 - `name`：situation；业务侧关注observable。
 
+## 可用区间分页
+
+`/availability/1` 是区间化可用性的入口，响应为 `items` 数组，并声明：
+
+- `next`：下一页路径，`null` 表示结束。
+- `calendar_version`：该页所属日历版本，也可放在 `X-Calendar-Version` 头。
+- `granularity`：该页声明的粒度（`day` 或 `30m`），也可放在 `X-Granularity` 头。
+- 可选的 `X-Zone`：页级默认时区；条目自身的 `zone` 优先。
+
+`/availability/3` 演示旧缓存回流：同一地址先返回 `calendar_version` 为 1 的旧页，再返回版本 3 的新页。接收方必须归档旧页但不能合并、不能推进游标。
+
+`/availability/day/1` 与 `/availability/fine/1` 分别代表整日接口与细粒度接口。两者可同时存在，但覆盖范围按声明粒度分层解释，不相加。
+
+条目字段为 `supplier`、`equipment`、`revision`、`zone`、`boundary`、`granularity`、`start`、`end`、`status`，语义见 `docs/availability.md`。
+
 另外提供 `/rate-limited`、`/unstable`、`/range`、`/range-ignored`、`/truncated`、`/observations/1`、`/observations/2`、`/observations/3`。响应内容和版本由场景文件逐项声明，便于核对实际收到的来源资料。

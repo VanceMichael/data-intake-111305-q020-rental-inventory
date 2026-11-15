@@ -157,6 +157,249 @@
           }
         ]
       }
+    },
+    "/availability/1": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 1,
+            "zone": "Europe/Berlin",
+            "granularity": "day",
+            "start": "2026-10-25",
+            "end": "2026-10-26",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-b",
+            "equipment": "EQ-7",
+            "revision": 1,
+            "zone": "Pacific/Auckland",
+            "granularity": "day",
+            "start": "2026-10-26",
+            "end": "2026-10-26",
+            "status": "available",
+            "boundary": "closed"
+          }
+        ],
+        "calendar_version": 1,
+        "granularity": "day",
+        "next": "/availability/2"
+      },
+      "headers": {
+        "ETag": "cal-1-day",
+        "X-Calendar-Version": "1",
+        "X-Granularity": "day"
+      }
+    },
+    "/availability/2": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 2,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 3,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T02:00:00+02:00",
+            "end": "2026-10-25T02:30:00+02:00",
+            "status": "unavailable"
+          }
+        ],
+        "calendar_version": 2,
+        "granularity": "30m",
+        "next": "/availability/3"
+      },
+      "headers": {
+        "ETag": "cal-2-30m",
+        "X-Calendar-Version": "2",
+        "X-Granularity": "30m"
+      }
+    },
+    "/availability/3": [
+      {
+        "json": {
+          "items": [
+            {
+              "supplier": "hire-a",
+              "equipment": "EQ-9",
+              "revision": 1,
+              "zone": "Europe/Berlin",
+              "granularity": "day",
+              "start": "2026-10-25",
+              "end": "2026-10-26",
+              "status": "available"
+            }
+          ],
+          "calendar_version": 1,
+          "granularity": "day",
+          "next": "/availability/3"
+        },
+        "headers": {
+          "ETag": "cal-1-day",
+          "X-Calendar-Version": "1",
+          "X-Granularity": "day"
+        }
+      },
+      {
+        "json": {
+          "items": [
+            {
+              "supplier": "hire-a",
+              "equipment": "EQ-9",
+              "revision": 4,
+              "zone": "Europe/Berlin",
+              "granularity": "30m",
+              "start": "2026-10-25T01:30:00+02:00",
+              "end": "2026-10-25T02:00:00+02:00",
+              "status": "cancelled"
+            },
+            {
+              "supplier": "hire-a",
+              "equipment": "EQ-9",
+              "revision": 5,
+              "zone": "Europe/Berlin",
+              "granularity": "30m",
+              "start": "2026-10-25T02:00:00+02:00",
+              "end": "2026-10-25T02:30:00+02:00",
+              "status": "unavailable"
+            }
+          ],
+          "calendar_version": 3,
+          "granularity": "30m",
+          "next": "/availability/4"
+        },
+        "headers": {
+          "ETag": "cal-3-30m",
+          "X-Calendar-Version": "3",
+          "X-Granularity": "30m"
+        }
+      }
+    ],
+    "/availability/4": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 6,
+            "zone": "UTC",
+            "granularity": "30m",
+            "start": "2026-10-25T00:00:00Z",
+            "end": "2026-10-25T00:30:00Z",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-b",
+            "equipment": "EQ-7",
+            "revision": 2,
+            "zone": "Pacific/Auckland",
+            "granularity": "30m",
+            "start": "2026-10-26T12:00:00+13:00",
+            "end": "2026-10-26T12:30:00+13:00",
+            "status": "cancelled",
+            "note": "retracts the closed-boundary day claim for this half hour"
+          }
+        ],
+        "calendar_version": 3,
+        "granularity": "30m",
+        "next": null
+      },
+      "headers": {
+        "ETag": "cal-3-30m",
+        "X-Calendar-Version": "3",
+        "X-Granularity": "30m"
+      }
+    },
+    "/availability/day/1": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 1,
+            "zone": "Europe/Berlin",
+            "granularity": "day",
+            "start": "2026-10-25",
+            "end": "2026-10-26",
+            "status": "available"
+          },
+          {
+            "supplier": "hire-b",
+            "equipment": "EQ-7",
+            "revision": 1,
+            "zone": "Pacific/Auckland",
+            "granularity": "day",
+            "start": "2026-10-26",
+            "end": "2026-10-26",
+            "status": "available",
+            "boundary": "closed"
+          }
+        ],
+        "calendar_version": 1,
+        "granularity": "day",
+        "next": null
+      },
+      "headers": {
+        "ETag": "cal-1-day",
+        "X-Calendar-Version": "1",
+        "X-Granularity": "day"
+      }
+    },
+    "/availability/fine/1": {
+      "json": {
+        "items": [
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 4,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T01:30:00+02:00",
+            "end": "2026-10-25T02:00:00+02:00",
+            "status": "cancelled"
+          },
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 5,
+            "zone": "Europe/Berlin",
+            "granularity": "30m",
+            "start": "2026-10-25T02:00:00+02:00",
+            "end": "2026-10-25T02:30:00+02:00",
+            "status": "unavailable"
+          },
+          {
+            "supplier": "hire-a",
+            "equipment": "EQ-9",
+            "revision": 6,
+            "zone": "UTC",
+            "granularity": "30m",
+            "start": "2026-10-25T00:00:00Z",
+            "end": "2026-10-25T00:30:00Z",
+            "status": "available"
+          }
+        ],
+        "calendar_version": 3,
+        "granularity": "30m",
+        "next": null
+      },
+      "headers": {
+        "ETag": "cal-3-30m",
+        "X-Calendar-Version": "3",
+        "X-Granularity": "30m"
+      }
     }
   }
 }
